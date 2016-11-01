@@ -30,6 +30,6 @@
 	-App.js
 	-c3.min.css
 	-index.css
-	-index.html
+	-index.js
 
 			
