@@ -2,23 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
-
-import Router from 'react-router';  
-import { DefaultRoute, IndexLink, Link, Route, RouteHandler } from 'react-router';
+import Modules from './components/Modules_List';
+import {Router, IndexRoute, Route, browserHistory, refresh} from 'react-router';
 
 let routes = (
-      <Router history={hashHistory}>
+    <Router history={browserHistory} >
         <Route path="/" component={App}>
-          <IndexRoute component={Home} />
-          <Route path="module1" component={Module1} />
-          <Route path="module2" component={Module2} />
-          <Route path='*' component={FourOhFour} />
+            <IndexRoute component={Modules.Overview} />
+            <Route path="chart1" component={Modules.Chart1} />
+            <Route path="chart2" component={Modules.Chart2} />
+            <Route path="chart3" component={Modules.Chart3} />
+            <Route path="module2" component={Modules.Module2} />
+            <Route path="resources" component={Modules.Resources} />
+            <Route path="dummymodule1" component={Modules.DummyModule1} />
+            <Route path="dummymodule2" component={Modules.DummyModule2} />
+            <Route path="livefeeds" component={Modules.LiveFeeds}>
+                <Route path="/frontcamera" component={Modules.FrontCamera} />
+                <Route path="/rearcamera" component={Modules.RearCamera} />
+            </Route>
+            <Route path="*" component={Modules.FourOhFour} />
         </Route>
-
-      </Router>
-)
+    </Router>
+);
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('react-app')
+  routes,
+  document.getElementById("react-app")
 );
