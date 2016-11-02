@@ -9,7 +9,7 @@ class Overview extends Component {
                 <Modules.Module2/>
                 <Modules.Chart2/>
                 <Modules.Chart3/>
-                <Modules.CameraModule/>
+                <Modules.LiveFeeds/>
             </div>
         );
     }
