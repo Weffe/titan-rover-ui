@@ -5,13 +5,13 @@ class MissionElapsedTime extends Component {
     constructor(props) {
         super(props);
 
-        let savedElapsedTime = parseInt(localStorage.getItem('savedElapsedTime'), 10);
-        let savedIsRunning = (localStorage.getItem('savedIsRunning') == 'true');  // convert savedIsRunning (str) to a bool type
+        let _savedElapsedTime = parseInt(localStorage.getItem('savedElapsedTime'), 10);
+        let _savedIsRunning = (localStorage.getItem('savedIsRunning') == 'true');  // convert savedIsRunning (str) to a bool type
 
         // load in savedElapsedTime for persistence or default to 0
-        this.elapsedTime = savedElapsedTime || 0;
-        let d = new Date(); // temp date obj
-        this.date = d.getFullYear()+'/'+d.getDate()+'/'+(d.getMonth()+1); // date for current day
+        this.elapsedTime = _savedElapsedTime || 0;
+        let _d = new Date(); // temp date obj
+        this.date = _d.getFullYear()+'/'+_d.getDate()+'/'+(_d.getMonth()+1); // date for current day
         this.interval = null;
         this.tick = this.tick.bind(this);
         this.handleStartAndStop = this.handleStartAndStop.bind(this);
@@ -19,10 +19,10 @@ class MissionElapsedTime extends Component {
 
         this.state = {
             // load in savedIsRunning or default to false
-            isRunning: (savedIsRunning || false),
+            isRunning: (_savedIsRunning || false),
             resetDisabled: false,
             // load in savedElapsedTime for persistence or default to 0
-            elapsedTotalTime: (savedElapsedTime || 0)
+            elapsedTotalTime: (_savedElapsedTime || 0)
         };
     }
 
