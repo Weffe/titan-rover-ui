@@ -5,10 +5,10 @@ import { Link } from 'react-router';
 // wrapper class for Links
 class NavLink extends Component {
     render () {
-        const span_file_line = (this.props.folderroot === true) ? null : <span className="file-line" />;
+        const file_line = (this.props.folderroot === true) ? null : <span className="file-line" />;
         return (
             <Link {...this.props} activeClassName="active">
-                {span_file_line}
+                {file_line}
                 <span className="link-text">
                     {this.props.text}
                 </span>
@@ -30,18 +30,15 @@ class Navbar extends Component {
                         <li>
                             <NavLink to="/" onlyActiveOnIndex={true} folderroot={true} className="folderroot" text="Overview" />
                             <ul className="folderlinks">
-                                <li><NavLink to="/chart1" text="Chart #1" /></li>
-                                <li><NavLink to="/module2" text="Module Name #2" /></li>
-                                <li><NavLink to="/chart2" text="Chart #2" /></li>
-                                <li><NavLink to="/chart3" text="Chart #3" /></li>
+                                <li><NavLink to="/chart1" text="Decagon 5TE Chart" /></li>
+                                <li><NavLink to="/chart2" text="DHT 11 Chart" /></li>
                                 <li><NavLink to="/livefeeds" text="Live Feeds" /></li>
                             </ul>
                         </li>
                         <li>
                             <NavLink to="/resources" folderroot={true} className="folderroot" text="Resources" />
                             <ul className="folderlinks">
-                                <li><NavLink to="/dummymodule1" text="Dummy Module 1" /></li>
-                                <li><NavLink to="/dummymodule2" text="Dummy Module 2" /></li>
+                                <li><NavLink to="/querydata" text="Query Data" /></li>
                             </ul>
                         </li>
                     </ul>

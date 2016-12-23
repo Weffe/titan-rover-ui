@@ -1,3 +1,10 @@
+h3 {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 15px;
+    color: darkorange;
+}
+
 #nav-header {
     min-width: 250px;
     min-height: 100vh; /*might need to change when the main content has srollbars*/
@@ -36,7 +43,8 @@
 }
 
 #met .controls {
-    margin-top: 10px;
+    margin: 10px 0 0 0;
+
 }
 #met .controls button {
     padding: 2px 10px;
@@ -50,9 +58,46 @@
     margin-bottom: 20px;
 }
 
-h3 {
+.module .controls {
+    margin-bottom: 15px;
+}
+.module .controls.query-data {
+    border: 1px solid gray;
+    display: flex;
+}
+.module .controls.query-data h4 {
+    color: royalblue;
+    padding-bottom: 10px;
     font-weight: bold;
-    font-size: 20px;
-    padding-bottom: 15px;
-    color: darkorange;
+}
+.module .controls.query-data > *{
+    padding: 10px;
+}
+
+.module .controls.query-data .sensor-option {
+    padding: 7px;
+    border-bottom: 1px solid gray;
+}
+.module .controls.query-data .sensor-option:last-child {
+    border-bottom: none;
+}
+
+.module .controls.query-data .options-border {
+    border-left: 1px solid gray;
+    padding: 0px;
+}
+
+.module .controls.query-data .options-container {
+    border: 1px solid gray;
+    min-height: 34px;
+}
+
+.module .controls.query-data .timerange {
+    margin-top: 5px;
+}
+.module .controls.query-data .timerange span {
+    padding: 0px 5px;
+}
+.hidden {
+    display: none !important;
 }
