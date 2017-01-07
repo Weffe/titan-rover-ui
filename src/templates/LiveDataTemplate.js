@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import c3 from 'c3';
 import io from 'socket.io-client';
-import roversettings from '../../rover_settings.json'
+import rover_settings from '../../rover_settings.json';
 
 /*
  Object {id: "01", timestamp: 1479856462231, EC: 1.03, VWC: 0, TempSoil: 22.9}
@@ -15,7 +15,7 @@ class LiveDataTemplate extends Component {
         super(props);
 
         //this.socketClient = io.connect('192.168.1.122:6993'); // set client to connect to the port where the homebase server listens on
-        this.socketClient = io.connect(roversettings.homebase_ip);
+        this.socketClient = io.connect(rover_settings.homebase_ip);
         this.state = {
             columns: this.props.chartInitialColumns,
             isRunning: true
@@ -105,7 +105,7 @@ class LiveDataTemplate extends Component {
         else {
             // handle start
             this.setState({isRunning: true});
-            this.socketClient.connect(roversettings.homebase_ip);
+            this.socketClient.connect(rover_settings.homebase_ip);
         }
     }
 
@@ -126,10 +126,10 @@ class LiveDataTemplate extends Component {
 export default LiveDataTemplate;
 
 /*
-TODO:
-- 8 modules needed for the page!
-- Maybe have behavior so that the server doesn't send data to the specific chart if the chart is paused
-    - only sends it on the initial load OR when the chart requests to get data (started chart)
+ TODO:
+ - 8 modules needed for the page!
+ - Maybe have behavior so that the server doesn't send data to the specific chart if the chart is paused
+ - only sends it on the initial load OR when the chart requests to get data (started chart)
  */
 
 
