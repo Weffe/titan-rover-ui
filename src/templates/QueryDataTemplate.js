@@ -13,7 +13,7 @@ class QueryDataTemplate extends Component {
 
     constructor(props) {
         super(props);
-        this.divID = this.props.sensorName + '-' + this.props.sensorID + '-' + this.props.keyIndex; // creating CSS div id for later use
+        this.divID = this.props.sensorName + '-' + this.props.sensorID + '-Index-' + this.props.keyIndex; // creating CSS div id for later use
         this.state = {
             columns: [],
             queryAllData: false
@@ -102,7 +102,7 @@ class QueryDataTemplate extends Component {
         return (
             <div>
                 <div className="controls">
-                    <button>{this.divID.toString()}</button>
+                    <button>{this.divID}</button>
                 </div>
                 <div id={this.divID}/>
             </div>
