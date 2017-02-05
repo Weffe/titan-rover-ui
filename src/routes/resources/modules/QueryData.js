@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import BaseModuleTemplate from '../../../templates/BaseModuleTemplate';
-import sensorsInfoDict from '../../../SensorsInfoDict';
 import rover_settings from '../../../../rover_settings.json';
-
 import SensorOptionTemplate from '../../../templates/SensorOptionTemplate';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -74,19 +72,11 @@ class QueryData extends Component {
     }
 
     setMoveData(dragIndex, hoverIndex) {
-        var data = this.state.data;
-        var dragData = data[dragIndex];
+        let data = this.state.data;
+        let dragData = data[dragIndex];
         data.splice(dragIndex, 1);
         data.splice(hoverIndex, 0, dragData);
         this.setState({data: data, activeKey: hoverIndex});
-    }
-
-    handleAddBackTab() {
-        var data = this.state.data;
-        var title = "Tab";
-        var content = "Some content";
-        data.push({title: title, content: content});
-        this.setState({data: data, activeKey: data.length-1});
     }
 
     // Sensor Options
@@ -113,8 +103,37 @@ class QueryData extends Component {
     }
 
     handleGenerateChart() {
-        return;
+        let selectedSensorsData = this.state.selectedSensorsData;
+        let data = this.state.data;
+        let sensorTabActiveKey = 0; // will hold activeKey for already generated tab to autofocus later
+
+        for (let sensor of selectedSensorsData) {
+            let sensorTabAlreadyGenerated = false;
+
+            for (let [index, tab] of data.entries()) {
+                if (sensor.sensorName === tab.title) {
+                    sensorTabAlreadyGenerated = true;
+                    sensorTabActiveKey = index;
+                }
+            }
+
+            if (!sensorTabAlreadyGenerated) {
+                // generate the sensor tab
+                this.handleAddBackTab(sensor.sensorName, sensor.sensorID);
+            }
+            else {
+                // auto-focus the already generated tab
+                this.setState({activeKey: sensorTabActiveKey});
+            }
+        }
     }
+
+    handleAddBackTab(title, content) {
+        let data = this.state.data;
+        data.push({title: title, content: content});
+        this.setState({data: data, activeKey: data.length-1});
+    }
+
 
 
     render() {
@@ -149,7 +168,6 @@ class QueryData extends Component {
 
                 <Tabs activeKey={this.state.activeKey}
                       style={"tabtab__" + 'folder' +"__"}
-                      handleAddBackClick={this.handleAddBackTab}
                       tabDeleteButton={true}
                       handleTabDeleteButton={this.handleTabDeleteButton}
                       draggable={true}
@@ -189,4 +207,23 @@ export default DragDropContext(HTML5Backend)(QueryData);
  },
  ...
  ];
+
+
+ TODO:
+ for the content of each tab... we need to generate a chartPanel or append a new chartPanel if the tab is already generated.
+ the chartPanel will consist of
+    1) Form to query data
+    2) Actual Chart to render queried data
+
+    Tab
+    |
+    ----- Title
+    |
+    ----- Content
+            |
+            ----- ChartPanel
+                    |
+                    ----- Form to Query Data
+                    |
+                    ----- Chart to render data
  */
