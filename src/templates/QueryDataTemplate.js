@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import c3 from 'c3';
 import io from 'socket.io-client';
 import rover_settings from '../../rover_settings.json';
+import SensorOption from './SensorOptionTemplate';
 
 /*
  Object {id: "01", timestamp: 1479856462231, EC: 1.03, VWC: 0, TempSoil: 22.9}
@@ -13,7 +14,7 @@ class QueryDataTemplate extends Component {
 
     constructor(props) {
         super(props);
-        this.divID = this.props.sensorName + '-' + this.props.sensorID + '-Index-' + this.props.keyIndex; // creating CSS div id for later use
+        this.chartID = this.props.sensorName + '-' + this.props.sensorID + '-Index-' + this.props.keyIndex; // creating CSS div id for later use
         this.state = {
             columns: [],
             queryAllData: false
@@ -72,7 +73,7 @@ class QueryDataTemplate extends Component {
 
     _renderChart() {
         this.chart = c3.generate({
-            bindto: '#' + this.divID.toString(),
+            bindto: '#' + this.chartID.toString(),
             data: {
                 columns: this.state.columns, // defaults to 'line' if no chartType is supplied by nature of c3.js behavior
                 type: this.props.chartType
@@ -102,9 +103,10 @@ class QueryDataTemplate extends Component {
         return (
             <div>
                 <div className="controls">
-                    <button>{this.divID}</button>
+                    <SensorOption sensorName={this.props.sensorName} sensorID={this.props.sensorID} chartID={this.chartID} />
+                    <button>{this.chartID}</button>
                 </div>
-                <div id={this.divID}/>
+                <div id={this.chartID}/>
             </div>
         );
     }

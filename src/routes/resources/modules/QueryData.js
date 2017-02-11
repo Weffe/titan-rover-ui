@@ -39,14 +39,25 @@ class QueryData extends Component {
     handleTabDeleteButton() {
         let data = this.state.data;
         let activeKey = this.state.activeKey;
+
+        console.info('Before--\nActive Key:' + activeKey + '\nLen:' + data.length);
+        console.info(JSON.stringify(data, null, '\t'));
+
         data.splice(activeKey, 1); // delete the selected key
+
         // count the active key
         if (data.length <= activeKey + 1)
             activeKey = data.length - 1;
+
+        console.info('After splice--\nActive Key:' + activeKey + '\nLen:' + data.length);
+        console.info(JSON.stringify(data, null, '\t'));
+
         this.setState({
             data: data,
             activeKey: activeKey
         })
+
+        this.forceUpdate();
     }
 
     handleDeleteAllButton() {
