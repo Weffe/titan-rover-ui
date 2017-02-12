@@ -14,7 +14,7 @@ class QueryDataTemplate extends Component {
 
     constructor(props) {
         super(props);
-        this.chartID = this.props.sensorName + '-' + this.props.sensorID + '-Index-' + this.props.keyIndex; // creating CSS div id for later use
+        // this.chartID = this.props.sensorName + '-' + this.props.sensorID + '-Index-' + this.props.keyIndex; // creating CSS div id for later use
         this.state = {
             columns: [],
             queryAllData: false
@@ -73,7 +73,7 @@ class QueryDataTemplate extends Component {
 
     _renderChart() {
         this.chart = c3.generate({
-            bindto: '#' + this.chartID.toString(),
+            bindto: '#' + this.props.chartID.toString(),
             data: {
                 columns: this.state.columns, // defaults to 'line' if no chartType is supplied by nature of c3.js behavior
                 type: this.props.chartType
@@ -98,15 +98,16 @@ class QueryDataTemplate extends Component {
         this.socketClient.disconnect();
     }
 
+
     render() {
 
         return (
             <div>
                 <div className="controls">
-                    <SensorOption sensorName={this.props.sensorName} sensorID={this.props.sensorID} chartID={this.chartID} />
-                    <button>{this.chartID}</button>
+                    <SensorOption sensorName={this.props.sensorName} sensorID={this.props.sensorID} chartID={this.props.chartID} />
+                    <button>{this.props.chartID}</button>
                 </div>
-                <div id={this.chartID}/>
+                <div id={this.props.chartID}/>
             </div>
         );
     }

@@ -55,9 +55,8 @@ class QueryData extends Component {
         this.setState({
             data: data,
             activeKey: activeKey
-        })
+        });
 
-        this.forceUpdate();
     }
 
     handleDeleteAllButton() {
@@ -119,7 +118,8 @@ class QueryData extends Component {
 
                     // push to the content []
                     let keyIndex = tab.content.length;
-                    tab.content.push(<QueryDataTemplate sensorName={sensor.sensorName} sensorID={sensor.sensorID} keyIndex={keyIndex}/>);
+                    let chartID = sensor.sensorName + '-' + sensor.sensorID + '-Index-' + keyIndex;
+                    tab.content.push(<QueryDataTemplate sensorName={sensor.sensorName} sensorID={sensor.sensorID} keyIndex={keyIndex} chartID={chartID}/>);
 
                     // auto-focus the already generated tab
                     this.setState({activeKey: sensorTabActiveKey});
@@ -127,7 +127,8 @@ class QueryData extends Component {
             }
 
             if (!sensorTabAlreadyGenerated) {
-                let content = [<QueryDataTemplate sensorName={sensor.sensorName} sensorID={sensor.sensorID} keyIndex={0}/>];
+                let chartID = sensor.sensorName + '-' + sensor.sensorID + '-Index-' + 0;
+                let content = [<QueryDataTemplate sensorName={sensor.sensorName} sensorID={sensor.sensorID} keyIndex={0} chartID={chartID}/>];
                 // generate the sensor tab
                 this.handleAddBackTab(sensor.sensorName, content);
             }
@@ -176,7 +177,7 @@ class QueryData extends Component {
                       style={"tabtab__" + 'folder' +"__"}
                       tabDeleteButton={true}
                       handleTabDeleteButton={this.handleTabDeleteButton}
-                      draggable={false}
+                      draggable={true}
                       beginDrag={this.beginDrag}
                       handleTabClick={this.handleTabClick}
                       setMoveData={this.setMoveData}

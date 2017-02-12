@@ -53,7 +53,7 @@ class SensorOptionTemplate extends Component {
     render() {
         let ShowOrHide = this.state.queryByTimeRange ? 'timerange' : 'timerange hidden';
 
-        console.info('queryAllData: ' + this.state.queryAllData + '\nqueryByTimeRange: ' + this.state.queryByTimeRange + '\nqueryStartTime: ' + this.state.queryStartTime + '\nqueryEndTime: ' + this.state.queryEndTime);
+        // console.info('queryAllData: ' + this.state.queryAllData + '\nqueryByTimeRange: ' + this.state.queryByTimeRange + '\nqueryStartTime: ' + this.state.queryStartTime + '\nqueryEndTime: ' + this.state.queryEndTime);
 
         return (
             <div className="sensor-option">
