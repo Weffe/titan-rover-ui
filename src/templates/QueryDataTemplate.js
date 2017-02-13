@@ -140,8 +140,9 @@ class QueryDataTemplate extends Component {
                                   handleInputChange={this.handleInputChange} handleQueryByChange={this.handleQueryByChange}
                                   handleSelectedChartType={this.handleSelectedChartType}
                     />
+                    <span className="options-border"/>
                     <button className="query-data-button" onClick={this.queryData}>Query Data</button>
-                    <span className="options-border" />
+                    <span className="options-border"/>
                     <div className="delete-chart-button tabtab__folder__circle" title="delete current chart" onClick={this.handleDeleteCurrentChart}></div>
                 </div>
                 <div id={this.props.chartID}/>

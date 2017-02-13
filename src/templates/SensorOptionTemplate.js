@@ -63,27 +63,29 @@ class SensorOptionTemplate extends Component {
 
         return (
             <div className="sensor-option">
-                <span className="sensor-label">{this.props.chartID}</span>
+                <div>
+                    <span className="sensor-label">{this.props.chartID}</span>
 
-                <label for="All Data">
-                    <input type="radio" name={this.props.chartID} value="allData" id="All Data" checked={this.state.queryAllData} onChange={this.handleAllDataChange}/>
-                    Get All Data
-                </label>
+                    <label for="All Data">
+                        <input type="radio" name={this.props.chartID} value="allData" id="All Data" checked={this.state.queryAllData} onChange={this.handleAllDataChange}/>
+                        Get All Data
+                    </label>
 
-                <label for="Timestamp Range">
-                    <input type="radio" name={this.props.chartID} value="timeRange" id="Timestamp Range" checked={this.state.queryByTimeRange} onChange={this.handleTimeRangeChange}/>
-                    Timestamp Range
-                </label>
+                    <label for="Timestamp Range">
+                        <input type="radio" name={this.props.chartID} value="timeRange" id="Timestamp Range" checked={this.state.queryByTimeRange} onChange={this.handleTimeRangeChange}/>
+                        Timestamp Range
+                    </label>
 
-                <div className={ShowOrHide}>
-                    <input type="text" placeholder="Beginning Timestamp" name="queryStartTime"
-                           onChange={this.handleInputChange}/>
-                    <span>to</span>
-                    <input type="text" placeholder="End Timestamp" name="queryEndTime"
-                           onChange={this.handleInputChange}/>
+                    <div className={ShowOrHide}>
+                        <input type="text" placeholder="Beginning Timestamp" name="queryStartTime"
+                               onChange={this.handleInputChange}/>
+                        <span>to</span>
+                        <input type="text" placeholder="End Timestamp" name="queryEndTime"
+                               onChange={this.handleInputChange}/>
+                    </div>
                 </div>
 
-                <select name="Chart Type" onChange={this.handleSelectedChartType} title="If none are selected it defaults to Line Chart">
+                <select name="Chart Type" className="chartType" onChange={this.handleSelectedChartType} title="If none are selected it defaults to Line Chart">
                     <option selected disabled>Chart Type</option>
                     <option value="line">Line Chart</option>
                     <option value="bar">Bar Chart</option>

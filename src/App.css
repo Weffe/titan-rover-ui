@@ -153,9 +153,18 @@ img{
     margin-left: 20px;
     margin-right: 5px;
     border-width: 2px;
- }
+}
 
-/* overwriting tabtab style for the delete all button*/
+.module .query-chart-panel .controls .chartType {
+    margin-left: 5px;
+    height: 21px;
+}
+
+.module .query-chart-panel .sensor-option {
+    display: flex;
+}
+
+    /* overwriting tabtab style for the delete all button*/
 .tabtab__folder__delete {
     right: 0px !important;
     top: -3px !important;
