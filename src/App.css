@@ -1,1 +1,61 @@
 @import '~antd/dist/antd.css';
+
+/* Stretching the modules vertically all the way */
+html {
+    height: 100vh;
+}
+
+body, #react-app, #react-app > * {
+    min-height: 100vh;
+}
+
+.logo {
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    font-size: 24px;
+    text-align: center;
+    background: #cc6c00;
+    color: white;
+    font-weight: bold;
+    box-shadow: inset 0 0 25px darkorange;
+    transition: ease 300ms;
+    white-space: nowrap;
+}
+
+.logo:hover {
+    box-shadow: inset 0 0 30px 3px darkorange;
+}
+
+.ant-layout-sider-collapsed .logo {
+    font-size: 18px;
+}
+
+.ant-layout-sider-collapsed .ant-menu-submenu-inline > .ant-menu-submenu-title:after {
+    right: 96px;
+}
+
+#met {
+    display: flex;
+    color: white;
+}
+#met > * {
+    padding: 0 5px;
+}
+
+#met .time-box > * {
+    padding: 0 5px;
+}
+
+#met .time-box:before {
+    content:'';
+    position: absolute;
+    height: 30px;
+    width: 160px;
+    border: 1px solid ghostwhite;
+    margin: 15px 0 0 -3px;
+}
+
+#met .timeBox, .controls > *{
+    margin: 0 3px;
+}

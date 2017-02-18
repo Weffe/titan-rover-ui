@@ -1,37 +1,28 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar';
 import MissionElapsedTime from './MissionElapsedTime';
 import './App.css';
+import '../public/iconfont/iconfont.css';
 import 'd3';
-import { Layout, Menu, Icon, Row, Col} from  'antd';
-const { Sider, Content } = Layout;
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
+import { Layout } from  'antd';
+const { Sider, Content, Header } = Layout;
+import NavMenu from './NavMenu';
 
 class App extends Component {
+
     render() {
         return (
             <Layout>
-                <Sider>
-                    <Menu
-                        mode="inline"
-                    >
-                        <Menu.Item key="overview">
-                            <Icon type="mail" /> Overview
-                        </Menu.Item>
-                        <Menu.Item key="Test">
-                            <Icon type="mail" /> Test
-                        </Menu.Item>
-                        <Menu.Item key="wow">
-                            <Icon type="mail" /> wow
-                        </Menu.Item>
-
-                    </Menu>
+                <Sider collapsible
+                       collapsedWidth="115"
+                >
+                    <Header><div className="logo">Titan Rover</div></Header>
+                    <NavMenu/>
                 </Sider>
                 <Content>
-                    Main content
-                    <MissionElapsedTime/>
-                    {this.props.children}
+                    <Header><MissionElapsedTime/></Header>
+                    <Content>
+                        {this.props.children}
+                    </Content>
                 </Content>
             </Layout>
         );

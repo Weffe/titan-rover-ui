@@ -10,8 +10,8 @@ let routes = (
         <Route path="/" component={App}>
 
             <IndexRoute component={Modules.Overview.Overview} />
-            <Route path="chart1" component={Modules.Overview.Chart1} />
-            <Route path="chart2" component={Modules.Overview.Chart2} />
+            <Route path="Decagon-5TE" component={Modules.Overview.Decagon5TE} />
+            <Route path="DHT-11" component={Modules.Overview.DHT11} />
             <Route path="livefeeds" component={Modules.Overview.LiveFeeds}>
                 <Route path="/armcamera" component={Modules.Overview.ArmCamera} />
                 <Route path="/mastcamera" component={Modules.Overview.MastCamera} />

@@ -15,20 +15,12 @@ class LiveDataTemplate extends Component {
         super(props);
 
         this.socketClient = io.connect(rover_settings.homebase_ip); // set client to connect to the port where the homebase server listens on
-        this.sensorID = this.getSensorID(this.props.sensorName);
         this.state = {
             columns: this.props.chartInitialColumns,
             isRunning: true
         };
-        this.chartID = this.props.sensorName + '-' + this.sensorID; // creating CSS div id for later use
+        this.chartID = this.props.sensorName + '-' + this.props.sensorID; // creating CSS div id for later use
         this.handleStartAndPause = this.handleStartAndPause.bind(this);
-    }
-
-    getSensorID(sensorName) {
-        for (let sensor of rover_settings.sensorsList) {
-            if (sensor.sensorName === sensorName)
-                return sensor.sensorID;
-        }
     }
 
     componentDidMount() {
@@ -43,7 +35,7 @@ class LiveDataTemplate extends Component {
         this.socketClient.on('get: client id', function () {
             console.info("get: client id CALLED. Sending...");
             console.info(self.chartID);
-            self.socketClient.emit('set: client id', self.sensorID);
+            self.socketClient.emit('set: client id', self.props.sensorID);
         });
 
         // updating chart
