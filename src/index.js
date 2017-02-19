@@ -22,6 +22,7 @@ let routes = (
 
             <Route path="resources" component={Modules.Resources.Resources} />
             <Route path="querydata" component={Modules.Resources.QueryData} />
+            <Route path="new-query" component={Modules.Query} />
             <Route path="*" component={Modules.FourOhFour} />
         </Route>
     </Router>

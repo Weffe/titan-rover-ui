@@ -24,7 +24,7 @@ class NavMenu extends Component {
                 defaultSelectedKeys={['overview']}
             >
                 <SubMenu key="mission-critical"
-                         title={<span><Icon type="aliwangwang-o"/> <span>Mission Critical</span></span>}>
+                         title={<span><Icon type="desktop"/> <span>Mission Critical</span></span>}>
 
                     <Menu.Item key="overview">
                         <Link to="/" onlyActiveOnIndex={true}>
@@ -36,7 +36,7 @@ class NavMenu extends Component {
 
                     <Menu.Item key="cameras">
                         <Link to="/livefeeds">
-                            <Icon type="video-camera" /> Cameras
+                            <Icon type="camera-o" /> Cameras
                         </Link>
                     </Menu.Item>
 
@@ -50,9 +50,15 @@ class NavMenu extends Component {
 
                 <SubMenu key="resources"
                          title={<span><Icon type="paper-clip"/> <span>Resources</span></span>}>
-                    <Menu.Item key="query">
+                    <Menu.Item key="querydata">
                         <Link to="/querydata">
                             <Icon type="area-chart" /> Query Data
+                        </Link>
+                    </Menu.Item>
+
+                    <Menu.Item key="new-query">
+                        <Link to="/new-query">
+                            <Icon type="bar-chart" /> New Query
                         </Link>
                     </Menu.Item>
                 </SubMenu>

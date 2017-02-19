@@ -59,3 +59,33 @@ body, #react-app, #react-app > * {
 #met .timeBox, .controls > *{
     margin: 0 3px;
 }
+
+.module {
+    margin: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.module .controls {
+    margin: 7px 0;
+}
+
+.ant-tag-text {
+     font-size: 14px;
+     font-weight: bold;
+ }
+
+.generation-options {
+    min-width: 200px;
+    max-width: 900px;
+}
+
+.ant-select-selection__placeholder {
+    color: darkgray;
+}
+
+.ant-select-selection__choice {
+    color: white;
+    background: #108ee9 !important;
+}

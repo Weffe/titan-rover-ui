@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import c3 from 'c3';
 import io from 'socket.io-client';
 import rover_settings from '../../rover_settings.json';
+import { Button } from 'antd';
 
 /*
  Object {id: "01", timestamp: 1479856462231, EC: 1.03, VWC: 0, TempSoil: 22.9}
@@ -119,7 +120,7 @@ class LiveDataTemplate extends Component {
         return (
             <div>
                 <div className="controls">
-                    <button onClick={this.handleStartAndPause}>{isRunningState}</button>
+                    <Button onClick={this.handleStartAndPause}>{isRunningState}</Button>
                 </div>
                 <div id={this.chartID}/>
             </div>
