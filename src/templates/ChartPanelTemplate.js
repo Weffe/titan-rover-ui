@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import c3 from 'c3';
 import io from 'socket.io-client';
 import rover_settings from '../../rover_settings.json';
-import { Layout, Button, Radio, Modal, TimePicker, message, Tag } from 'antd';
+import { Layout, Button, Radio, Modal, TimePicker, message, Tag, Select } from 'antd';
 const { Content, Header } = Layout;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
+const Option = Select.Option;
 
 class PanelOptions extends Component {
     constructor(props) {
@@ -37,12 +38,14 @@ class PanelOptions extends Component {
                 queryAllData: true,
                 queryByTimerange: false
             });
+            this.props.setDataToQuery({queryAllData: true, queryByTimerange: false});
         }
         else {
             this.setState({
                 queryAllData: false,
                 queryByTimerange: true
             });
+            this.props.setDataToQuery({queryAllData: false, queryByTimerange: true});
         }
     }
 
@@ -63,6 +66,7 @@ class PanelOptions extends Component {
                 queryStartTime: this.state.tempStartTime,
                 queryEndTime: this.state.tempEndTime
             });
+            this.props.setDataToQuery({queryStartTime: this.state.tempStartTime, queryEndTime: this.state.tempEndTime});
         }
     }
 
@@ -124,10 +128,16 @@ class ChartPanelTemplate extends Component {
         super(props);
 
         this.state = {
-            columns: []
+            columns: [],
+            queryAllData: true, // defualt value
+            queryByTimerange: false // default value
         };
 
         this.socketClient = io.connect(rover_settings.homebase_ip);
+        this.handleDeleteChartPanel = this.handleDeleteChartPanel.bind(this);
+        this.queryData = this.queryData.bind(this);
+        this.setDataToQuery = this.setDataToQuery.bind(this);
+        this.handleChartTypeChange = this.handleChartTypeChange.bind(this);
     }
 
     componentDidMount() {
@@ -188,10 +198,10 @@ class ChartPanelTemplate extends Component {
 
     _renderChart() {
         this.chart = c3.generate({
-            bindto: '#' + this.props.chartID.toString(),
+            bindto: '#' + this.props.chartID,
             data: {
                 columns: this.state.columns,
-                type: 'line'// defaults to 'line' if no chartType is supplied by nature of c3.js behavior
+                type: this.chartType// defaults to 'line' if no chartType is supplied by nature of c3.js behavior
             },
             size: {
                 width: this.maxWidth
@@ -202,22 +212,67 @@ class ChartPanelTemplate extends Component {
         });
     }
 
-    queryData() {
-
-    }
-
-    handleDeleteChartPanel = () => {
+    handleDeleteChartPanel() {
         this.props.handleDeleteChartPanel(this.props.sensorName, this.props.panelKey);
     };
 
+    queryData() {
+
+        //    to be COMPLETED
+        console.info(this.state);
+
+        let dataToBeQueried = {sensorID: this.props.sensorID};
+
+        if (this.state.queryAllData) {
+            this.socketClient.emit('get: queryAllData', dataToBeQueried)
+        }
+        else {
+
+            // additional check if trying to queryByTimerange when no time is set
+            if (this.state.queryStartTime == null || this.state.queryEndTime == null) {
+                message.error('Can\'t query with empty timerange(s). Please go back and select a time value.', 2.5);
+            }
+            else {
+                // we need to add the start and end timerange
+                // ...dataToBeQueried uses the spread operator in es2015
+                dataToBeQueried = {
+                    ...dataToBeQueried,
+                    queryStartTime: this.state.queryStartTime,
+                    queryEndTime: this.state.queryEndTime
+                };
+                this.socketClient.emit('get: queryByTimerange', dataToBeQueried)
+            }
+        }
+
+        console.info('Data to be queried:');
+        console.info(JSON.stringify(dataToBeQueried, null, '\t'));
+    }
+
+    setDataToQuery(dataToQuery) {
+        this.setState(dataToQuery);
+    }
+
+    handleChartTypeChange(value) {
+        this.chartType = value;
+        this.chart.transform(value);
+    }
+
     render() {
+        let chartTypes = ['line','spline','step','area','area-spline','area-step','bar','scatter','pie','donut','gauge'];
+        let chartTypeOptions = chartTypes.map(type => <Option value={type}>{type} chart</Option>);
+
         return (
             <Layout>
                 <Header className="controls">
                     <Tag color="blue">{this.props.chartID}</Tag>
-                    <PanelOptions/>
-                    <Button type="primary" >Query Data</Button>
-                    <Button type="danger" onClick={this.handleDeleteChartPanel} icon="close-circle-o">Delete Current Chart Panel</Button>
+                    <PanelOptions setDataToQuery={this.setDataToQuery}/>
+
+                    <Select defaultValue={chartTypes[0]} size="large" onChange={this.handleChartTypeChange}>
+                        {chartTypeOptions}
+                    </Select>
+
+                    <Button type="primary" onClick={this.queryData}>Query Data</Button>
+                    <Button type="danger" icon="close-circle-o" onClick={this.handleDeleteChartPanel}>Delete Current Chart Panel</Button>
                 </Header>
 
                 <Content>

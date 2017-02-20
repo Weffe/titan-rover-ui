@@ -50,8 +50,7 @@ class Query extends Component {
             panes: [],
         };
 
-        this.newTabIndex = 0;
-        this.panelKeys = 0;
+        this.uniqueIndexKey = 0; // used for assigning unique keys to Elements inside arrays
         this.handleOnSelect = this.handleOnSelect.bind(this);
         this.handleOnDeselect = this.handleOnDeselect.bind(this);
         this.handleGenerateCharts = this.handleGenerateCharts.bind(this);
@@ -98,7 +97,7 @@ class Query extends Component {
                 if (sensor.sensorName === pane.title) {
                     paneAlreadyExists = true;
                     // let chartPanelKey = pane.content.length;
-                    let chartPanelKey = this.panelKeys++;
+                    let chartPanelKey = this.uniqueIndexKey++;
 
                     let chartID = (sensor.sensorName + '-' + sensor.sensorID + '-Key-' + chartPanelKey).toString();
 
@@ -118,9 +117,9 @@ class Query extends Component {
             // extra check for paneAlreadyExists
             if (!paneAlreadyExists) {
                 // this means we need to create a new pane
-                let chartPanelKey = this.panelKeys++;
+                let chartPanelKey = this.uniqueIndexKey++;
                 let chartID = (sensor.sensorName + '-' + sensor.sensorID + '-Key-' + chartPanelKey).toString();
-                let paneKey = (this.newTabIndex++).toString(); // increment newTabIndex to create a new unique key for each pane
+                let paneKey = (this.uniqueIndexKey++).toString(); // increment newTabIndex to create a new unique key for each pane
                 let chartPanelTemplate = (
                     <ChartPanelTemplate sensorName={sensor.sensorName} sensorID={sensor.sensorID}
                                         chartID={chartID} key={chartPanelKey} panelKey={chartPanelKey} handleDeleteChartPanel={this.handleDeleteChartPanel}
@@ -147,7 +146,7 @@ class Query extends Component {
                 // should delete current tab BUUTT
                 // it doesn't... instead it auto-focuses the prev Tab
                 // Let's just call it a feature ;)
-                // no more content then we auto-focus prev tab.
+                // if there's no more content then we auto-focus prev tab
                 if (newContent.length == 0) {
                     this.remove(pane.key)
                 }
