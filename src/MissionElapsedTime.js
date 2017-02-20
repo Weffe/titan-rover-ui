@@ -97,7 +97,7 @@ class MissionElapsedTime extends Component {
                 </div>
                 <div className="controls">
                     <Button type="primary" onClick={this.handleStartAndPause}>{isRunningState}</Button>
-                    <Button type="primary" onClick={this.handleReset} disabled={resetDisabledState}>Reset</Button>
+                    <Button type="danger" onClick={this.handleReset} disabled={resetDisabledState}>Reset</Button>
                 </div>
             </div>
         )

@@ -120,7 +120,7 @@ class LiveDataTemplate extends Component {
         return (
             <div>
                 <div className="controls">
-                    <Button onClick={this.handleStartAndPause}>{isRunningState}</Button>
+                    <Button type="primary" onClick={this.handleStartAndPause}>{isRunningState}</Button>
                 </div>
                 <div id={this.chartID}/>
             </div>

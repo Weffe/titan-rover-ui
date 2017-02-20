@@ -3,28 +3,35 @@ import MissionElapsedTime from './MissionElapsedTime';
 import './App.css';
 import '../public/iconfont/iconfont.css';
 import 'd3';
-import { Layout } from  'antd';
+import { Layout, Affix, LocaleProvider } from  'antd';
 const { Sider, Content, Header } = Layout;
 import NavMenu from './NavMenu';
+import enUS from 'antd/lib/locale-provider/en_US';
+
+/*
+    Need to wrap in LocaleProvider to set default language to en_US
+ */
 
 class App extends Component {
 
     render() {
         return (
-            <Layout>
-                <Sider collapsible
-                       collapsedWidth="115"
-                >
-                    <Header><div className="logo">Titan Rover</div></Header>
-                    <NavMenu/>
-                </Sider>
-                <Content>
-                    <Header><MissionElapsedTime/></Header>
+            <LocaleProvider locale={enUS}>
+                <Layout>
+                    <Sider collapsible
+                           collapsedWidth="115"
+                    >
+                        <Header><div className="logo">Titan Rover</div></Header>
+                        <NavMenu/>
+                    </Sider>
                     <Content>
-                        {this.props.children}
+                        <Affix><Header><MissionElapsedTime/></Header></Affix>
+                        <Content>
+                            {this.props.children}
+                        </Content>
                     </Content>
-                </Content>
-            </Layout>
+                </Layout>
+            </LocaleProvider>
         );
     }
 }

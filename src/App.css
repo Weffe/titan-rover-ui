@@ -89,3 +89,21 @@ body, #react-app, #react-app > * {
     color: white;
     background: #108ee9 !important;
 }
+
+.ant-layout-header {
+    background: none;
+}
+
+.queryByTimerange-settings {
+    display: flex;
+}
+
+.time-picker {
+    float: left;
+    padding-bottom: 20px;
+    margin: 0 30px 0 0;
+}
+
+.queryByTimerange-settings .ant-time-picker-input {
+    /*color: black;*/
+}
