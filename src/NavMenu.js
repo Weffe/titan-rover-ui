@@ -16,18 +16,20 @@ class NavMenu extends Component {
             </Menu.Item>
         );
 
+        // let currentLocation = this.props.location.pathname;
+        // console.info('currentLocation: ' + currentLocation);
+
         return (
             <Menu
                 mode="inline"
                 theme="dark"
                 defaultOpenKeys={['mission-critical', 'resources']}
-                defaultSelectedKeys={['overview']}
             >
                 <SubMenu key="mission-critical"
                          title={<span><Icon type="desktop"/> <span>Mission Critical</span></span>}>
 
                     <Menu.Item key="overview">
-                        <Link to="/" onlyActiveOnIndex={true}>
+                        <Link to="/" onlyActiveOnIndex={true} activeClassName="hotfix-item-selected">
                             <Icon type="star-o" /> Overview
                         </Link>
                     </Menu.Item>
@@ -41,7 +43,6 @@ class NavMenu extends Component {
                     </Menu.Item>
 
                     <Menu.Item key="arm-control">
-
                         <Link to="/arm-control">
                             <Icon type="user" /> Arm Control
                         </Link>

@@ -7,6 +7,7 @@ html {
 
 body, #react-app, #react-app > * {
     min-height: 100vh;
+    background: white;
 }
 
 .logo {
@@ -15,16 +16,16 @@ body, #react-app, #react-app > * {
     left: 0px;
     font-size: 24px;
     text-align: center;
-    background: #cc6c00;
+    background: darkorange;
     color: white;
     font-weight: bold;
-    box-shadow: inset 0 0 25px darkorange;
+    box-shadow: inset 0 0 25px orange;
     transition: ease 300ms;
     white-space: nowrap;
 }
 
 .logo:hover {
-    box-shadow: inset 0 0 30px 3px darkorange;
+    box-shadow: inset 0 0 30px 10px #ffaf4d;
 }
 
 .ant-layout-sider-collapsed .logo {
@@ -90,20 +91,42 @@ body, #react-app, #react-app > * {
     background: #108ee9 !important;
 }
 
-.ant-layout-header {
-    background: none;
-}
-
-.queryByTimerange-settings {
+.queryByTimerange-settings .ant-modal-body {
     display: flex;
 }
 
 .time-picker {
     float: left;
-    padding-bottom: 20px;
-    margin: 0 30px 0 0;
+    padding-bottom: 10px;
+    margin: 0 100px 0 0;
 }
 
-.queryByTimerange-settings .ant-time-picker-input {
-    /*color: black;*/
+.queryByTimerange-settings .ant-time-picker-input::-webkit-input-placeholder {
+    /* setting the placeholder text color to a darker color */
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+#chart-panels .controls {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+#chart-panels .ant-layout {
+    background: white;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+#chart-panels .ant-layout:last-child {
+    margin-bottom: 0px;
+}
+
+#chart-panels .ant-layout-header {
+    border-radius: 5px 5px 0 0;
+}
+
+#chart-panels .ant-layout-content {
+    padding-top: 20px;
 }

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Layout, Button, Radio, Modal, TimePicker } from 'antd';
+import c3 from 'c3';
+import io from 'socket.io-client';
+import rover_settings from '../../rover_settings.json';
+import { Layout, Button, Radio, Modal, TimePicker, message, Tag } from 'antd';
 const { Content, Header } = Layout;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
@@ -45,14 +48,22 @@ class PanelOptions extends Component {
 
     showModal() {
         // set start and end time to old values if the user cancels modal
-        this.state.tempStartTime = this.state.queryStartTime;
-        this.state.tempEndTime = this.state.queryEndTime;
-        this.setState({modalVisible: true});
+        this.setState({modalVisible: true, tempStartTime: this.state.queryStartTime, tempEndTime:this.state.queryEndTime});
     };
 
     handleOk() {
-        // we set new time changes
-        this.setState({modalVisible: false, queryStartTime: this.state.tempStartTime, queryEndTime: this.state.tempEndTime});
+        // check for trying to set null times
+        if (this.state.tempStartTime == null || this.state.tempEndTime == null) {
+            message.error('Can\'t save empty time. Please select a time value.');
+        }
+        else {
+            // we set new time changes
+            this.setState({
+                modalVisible: false,
+                queryStartTime: this.state.tempStartTime,
+                queryEndTime: this.state.tempEndTime
+            });
+        }
     }
 
     handleCancel() {
@@ -83,15 +94,23 @@ class PanelOptions extends Component {
                 >
                     <div className="time-picker">
                         <h3>Start Time</h3>
-                        <TimePicker value={this.state.tempStartTime} onChange={this.handleStartTimeChange}
-                                    placeholder="Start Time"
+                        <TimePicker value={this.state.tempStartTime} onChange={this.handleStartTimeChange} placeholder="Start Time"
+                            addon={panel => (
+                                <Button size="small" type="primary" onClick={() => panel.close()}>
+                                    Ok
+                                </Button>
+                            )}
                         />
                     </div>
 
                     <div className="time-picker">
                         <h3>End Time</h3>
-                        <TimePicker value={this.state.tempEndTime} onChange={this.handleEndTimeChange}
-                                    placeholder="End Time"
+                        <TimePicker value={this.state.tempEndTime} onChange={this.handleEndTimeChange} placeholder="End Time"
+                            addon={panel => (
+                                <Button size="small" type="primary" onClick={() => panel.close()}>
+                                Ok
+                                </Button>
+                            )}
                         />
                     </div>
                 </Modal>
@@ -101,16 +120,108 @@ class PanelOptions extends Component {
 }
 
 class ChartPanelTemplate extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            columns: []
+        };
+
+        this.socketClient = io.connect(rover_settings.homebase_ip);
+    }
+
+    componentDidMount() {
+        // use maxWidth to hardcode chart width for performance
+        // Note: This option should be specified if possible because it can improve its performance because
+        // some size calculations will be skipped by an explicit value.
+        this.maxWidth = document.querySelector('#main-content').clientWidth - 60;
+
+        // initial render of the chart
+        this._renderChart();
+
+        let self = this; // preserve "this"
+
+        // socket Event handlers
+        // event for inital socket connection to set client id for future use on server-side
+        this.socketClient.on('get: client id', function () {
+            self.socketClient.emit('set: client id', self.props.sensorID);
+        });
+
+        // events for Querying
+        // receiving queried All Data from homebase
+        this.socketClient.on('set: queryAllData', function(jsonObj) {
+            console.info('Receieved data from homebase!');
+            console.info(jsonObj);
+
+            // first check if the query was unsuccessful
+            if('errorMessage' in jsonObj) {
+                console.info('There was an error querying all the data!')
+            }
+            else {
+                // set state of the new columns
+                self.setState({columns: jsonObj})
+            }
+        });
+        // receiving queried Time Range Data from homebase
+        this.socketClient.on('set: queryByTimerange', function(jsonObj) {
+            console.info('Receieved data from homebase!');
+            console.info(jsonObj);
+
+            // first check if the query was unsuccessful
+            if('errorMessage' in jsonObj) {
+                console.info('There was an error querying by timerange!')
+            }
+            else {
+                // set state of the new columns
+                self.setState({columns: jsonObj})
+            }
+        });
+
+    }
+
+    componentDidUpdate() {
+        // load new data into our chart
+        this.chart.load({
+            columns: this.state.columns
+        });
+    }
+
+    _renderChart() {
+        this.chart = c3.generate({
+            bindto: '#' + this.props.chartID.toString(),
+            data: {
+                columns: this.state.columns,
+                type: 'line'// defaults to 'line' if no chartType is supplied by nature of c3.js behavior
+            },
+            size: {
+                width: this.maxWidth
+            },
+            zoom: {
+                enabled: true
+            }
+        });
+    }
+
+    queryData() {
+
+    }
+
+    handleDeleteChartPanel = () => {
+        this.props.handleDeleteChartPanel(this.props.sensorName, this.props.panelKey);
+    };
+
     render() {
         return (
             <Layout>
-                <Header>
+                <Header className="controls">
+                    <Tag color="blue">{this.props.chartID}</Tag>
                     <PanelOptions/>
-                    <Button>Query Data</Button>
+                    <Button type="primary" >Query Data</Button>
+                    <Button type="danger" onClick={this.handleDeleteChartPanel} icon="close-circle-o">Delete Current Chart Panel</Button>
                 </Header>
 
                 <Content>
-                    chart here
+                    <div id={this.props.chartID}/>
                 </Content>
             </Layout>
         );

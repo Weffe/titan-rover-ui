@@ -24,7 +24,7 @@ class App extends Component {
                         <Header><div className="logo">Titan Rover</div></Header>
                         <NavMenu/>
                     </Sider>
-                    <Content>
+                    <Content id="main-content">
                         <Affix><Header><MissionElapsedTime/></Header></Affix>
                         <Content>
                             {this.props.children}
