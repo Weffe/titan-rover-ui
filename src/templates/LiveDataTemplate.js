@@ -32,6 +32,7 @@ class LiveDataTemplate extends Component {
 
         this.chartID = this.props.sensorName + '-' + this.props.sensorID; // creating CSS div id for later use
         this.handleStartAndPause = this.handleStartAndPause.bind(this);
+        this.handleBookmark = this.handleBookmark.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +80,24 @@ class LiveDataTemplate extends Component {
             self.dataPointsCounter++;
         });
 
+        this.chart.flow({
+            json: [{"x":1,"y":5,"z":6,"timestamp":3323523555}],
+            keys: {
+                x: 'timestamp',
+                value: ['x','y','z'],
+            },
+            length: 0
+        });
+
+        this.chart.flow({
+            json: [{"x":5,"y":15,"z":16,"timestamp":39923523599}],
+            keys: {
+                x: 'timestamp',
+                value: ['x','y','z'],
+            },
+            length: 0
+        });
+        console.info(this.chart.data.shown());
     }
 
     componentDidUpdate() {
@@ -101,7 +120,7 @@ class LiveDataTemplate extends Component {
         this.chart = c3.generate({
             bindto: '#' + this.chartID.toString(),
             data: {
-                columns: [],
+                json: [],
                 type: this.props.chartType,  // defaults to 'line' if no chartType is supplied by nature of c3.js behavior
             },
             size: {
@@ -136,16 +155,24 @@ class LiveDataTemplate extends Component {
         }
     }
 
-    handleBookmark = () => {
-        let startTime, endTime, m;
+    handleBookmark() {
+        let startTime, endTime, m, firstDataPoint, lastDataPoint;
+        let chartData = this.chart.data.shown(); // returns array of nested objects
 
-        // startTime = this.state.columns[0][1]; // first real element of data.
-        // startTime = startTime.timestamp;
+        chartData = chartData[0]; // we can just use the 1st element object to get the start/end timestamps
+        firstDataPoint = chartData.values[0];
+        lastDataPoint = chartData.values[(chartData.values.length-1)];
+        startTime = firstDataPoint.x;
+        endTime = lastDataPoint.x;
 
-        // m = moment(startTime);
-        // startTime = m.format('HH:mm:ss');
+        console.info(startTime);
+        console.info(endTime);
 
+        startTime = moment(startTime).valueOf();
+        endTime = moment(endTime).valueOf();
 
+        console.info(startTime);
+        console.info(endTime);
 
         // localStorage.setItem('savedIsRunning', 'true');
         // localStorage.getItem('savedElapsedTime')
