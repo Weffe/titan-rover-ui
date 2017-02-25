@@ -69,35 +69,13 @@ class LiveDataTemplate extends Component {
                     }
                 }
             }
-
-            // When using new Date() the label works but formats the wrong Hour
-            // When using just Date() the label doesnt work but formats the correct Hour
-            // dataObj.timestamp     = Date(dataObj.timestamp);
-            // console.info(dataObj.timestamp);
+            // convert to Date Object for c3 to use as labeling
+            dataObj.timestamp = new Date(dataObj.timestamp);
 
             self.setState({dataObj: dataObj, dataKeys: keys});
 
             self.dataPointsCounter++;
         });
-
-        this.chart.flow({
-            json: [{"x":1,"y":5,"z":6,"timestamp":3323523555}],
-            keys: {
-                x: 'timestamp',
-                value: ['x','y','z'],
-            },
-            length: 0
-        });
-
-        this.chart.flow({
-            json: [{"x":5,"y":15,"z":16,"timestamp":39923523599}],
-            keys: {
-                x: 'timestamp',
-                value: ['x','y','z'],
-            },
-            length: 0
-        });
-        console.info(this.chart.data.shown());
     }
 
     componentDidUpdate() {
@@ -156,7 +134,7 @@ class LiveDataTemplate extends Component {
     }
 
     handleBookmark() {
-        let startTime, endTime, m, firstDataPoint, lastDataPoint;
+        let startTime, endTime, firstDataPoint, lastDataPoint;
         let chartData = this.chart.data.shown(); // returns array of nested objects
 
         chartData = chartData[0]; // we can just use the 1st element object to get the start/end timestamps
@@ -165,19 +143,47 @@ class LiveDataTemplate extends Component {
         startTime = firstDataPoint.x;
         endTime = lastDataPoint.x;
 
-        console.info(startTime);
-        console.info(endTime);
+        // create time strings to be used for the display message
+        let startTimeString = moment(startTime).format("HH:mm:ss");
+        let endTimeString = moment(endTime).format("HH:mm:ss");
 
-        startTime = moment(startTime).valueOf();
-        endTime = moment(endTime).valueOf();
+        // best to save time as unix time to localStorage
+        startTime = moment(startTime).valueOf(); // get unix time value
+        endTime = moment(endTime).valueOf(); // get unix time value
 
-        console.info(startTime);
-        console.info(endTime);
+        let bookmarkObj = {"startTime": startTime, "endTime": endTime};
 
-        // localStorage.setItem('savedIsRunning', 'true');
-        // localStorage.getItem('savedElapsedTime')
+        let timerangeBookmarks = JSON.parse(localStorage.getItem("timerangeBookmarks")) || {}; // default to empty obj if it doesnt exist
 
-        message.success('[' + this.props.sensorName + '-' + this.props.sensorID + '] Bookmarked: (Timestamp will be here)', 2.5);
+        let currentBookmarkSensor; // holds a list of time objects
+
+        if (this.props.sensorName in timerangeBookmarks) {
+            currentBookmarkSensor = timerangeBookmarks[this.props.sensorName];
+            currentBookmarkSensor.push(bookmarkObj);
+        }
+        else {
+            // add bookmark sensor to the json obj
+            currentBookmarkSensor = [bookmarkObj]; // we can init the array with the bookmarkObj immediately
+            timerangeBookmarks[this.props.sensorName] = currentBookmarkSensor;
+        }
+
+        // {
+        //     DHT-11: [
+        //         {startTime: value, endTime: value},
+        //         {...}
+        //     ],
+        //     ...
+        // }
+
+        // convert to string before storing or else itll break
+        timerangeBookmarks = JSON.stringify(timerangeBookmarks);
+        localStorage.setItem('timerangeBookmarks', timerangeBookmarks);
+
+        message.success('[' + this.props.sensorName + '-' + this.props.sensorID + '] ' +
+            'Bookmarked: ' + startTimeString + ' - ' + endTimeString, 2.5);
+
+        console.info('[' + this.props.sensorName + '-' + this.props.sensorID + '] ' +
+            'Bookmarked: ' + startTimeString + ' - ' + endTimeString);
     };
 
     render() {

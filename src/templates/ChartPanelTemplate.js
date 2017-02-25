@@ -32,6 +32,65 @@ class PanelOptions extends Component {
         this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
     }
 
+    componentDidMount() {
+        this.timerangeBookmarks = [];
+        let lsObj = JSON.parse(localStorage.getItem("timerangeBookmarks"));
+
+        console.info(lsObj);
+
+        for (let key in lsObj) {
+            this.timerangeBookmarks.push(lsObj[key]);
+        }
+
+        // NOTE:
+        // I need to convert from regualr JSON Obj to JSON formatted like on ANT Design
+
+        // const options = [{
+        //     value: 'zhejiang',
+        //     label: 'Zhejiang',
+        //     children: [{
+        //         value: 'hangzhou',
+        //         label: 'Hangzhou',
+        //         children: [{
+        //             value: 'xihu',
+        //             label: 'West Lake',
+        //             code: 752100,
+        //         }],
+        //     }],
+        // }, {
+        //     value: 'jiangsu',
+        //     label: 'Jiangsu',
+        //     children: [{
+        //         value: 'nanjing',
+        //         label: 'Nanjing',
+        //         children: [{
+        //             value: 'zhonghuamen',
+        //             label: 'Zhong Hua Men',
+        //             code: 453400,
+        //         }],
+        //     }],
+        // }];
+
+        // {
+        //     "Decagon-5TE":[
+        //         {
+        //             "startTime":1487998744951,
+        //             "endTime":1487998753314
+        //         },
+        //         {
+        //             "startTime":1487998744951,
+        //             "endTime":1487998774202
+        //         },
+        //         {
+        //             "startTime":1487998744951,
+        //             "endTime":1487998786727
+        //         }
+        //     ]
+        // }
+
+        console.info(this.timerangeBookmarks);
+    }
+
     handleOnChange(event) {
         // swapping values based on event.target.value
         if (event.target.value == 'queryAllData') {
@@ -84,51 +143,26 @@ class PanelOptions extends Component {
         this.setState({tempEndTime: time})
     }
 
-    displayRender = (labels, selectedOptions) => labels.map((label, i) => {
-        const option = selectedOptions[i];
-        if (i == 1) {
-            return (
-                <span key={option.value}>
-                    {label} -
-                </span>
-            );
-        }
-        if (i == 2) {
-            return (
-                <span key={option.value}>
-                     &nbsp;{label}
-                </span>
-            );
-        }
-        return <span key={option.value}>{label} / </span>;
-    });
+    // displayRender = (labels, selectedOptions) => labels.map((label, i) => {
+    //     const option = selectedOptions[i];
+    //     if (i == 1) {
+    //         return (
+    //             <span key={option.value}>
+    //                 {label} -
+    //             </span>
+    //         );
+    //     }
+    //     if (i == 2) {
+    //         return (
+    //             <span key={option.value}>
+    //                  &nbsp;{label}
+    //             </span>
+    //         );
+    //     }
+    //     return <span key={option.value}>{label} / </span>;
+    // });
 
     render() {
-        const options = [{
-            value: 'DHT-11',
-            label: 'DHT-11',
-            children: [{
-                value: '12:00:06',
-                label: '12:00:06',
-                children: [{
-                    value: '16:49:06',
-                    label: '16:49:06',
-                }],
-            }],
-        }, {
-            value: 'Decagon-5TE',
-            label: 'Decagon-5TE',
-            children: [{
-                value: '00:04:36',
-                label: '00:04:36',
-                children: [{
-                    value: '00:10:56',
-                    label: '00:10:56',
-                }],
-            }],
-        }];
-
-
         return (
             <div>
                 <RadioGroup onChange={this.handleOnChange} defaultValue="queryAllData">
@@ -143,8 +177,7 @@ class PanelOptions extends Component {
                 >
                     <div>
                         <h3>Bookmarked Timestamps - Autofill Time Pickers</h3>
-                        <Cascader options={options}
-                                  displayRender={this.displayRender}
+                        <Cascader options={this.timerangeBookmarks}
                                   style={{ width: 270 }}
                                   size="large"
                                   placeholder="Bookmarked Timestamps"
@@ -330,8 +363,8 @@ class ChartPanelTemplate extends Component {
                 // ...dataToBeQueried uses the spread operator in es2015
                 dataToBeQueried = {
                     ...dataToBeQueried,
-                    queryStartTime: moment.utc(this.state.queryStartTime).valueOf(), // need to convert to epoch time
-                    queryEndTime: moment.utc(this.state.queryEndTime).valueOf() // need to convert to epoch time
+                    queryStartTime: moment(this.state.queryStartTime).valueOf(), // need to convert to epoch time
+                    queryEndTime: moment(this.state.queryEndTime).valueOf() // need to convert to epoch time
                 };
 
                 this.socketClient.emit('get: queryByTimerange', dataToBeQueried)
