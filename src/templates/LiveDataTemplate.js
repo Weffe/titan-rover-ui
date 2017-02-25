@@ -5,18 +5,6 @@ import rover_settings from '../../rover_settings.json';
 import { Button, message } from 'antd';
 import moment from 'moment';
 
-/*
- Object {id: "01", timestamp: 1479856462231, EC: 1.03, VWC: 0, TempSoil: 22.9}
-
- Object {id: "02", timestamp: 1479856462281, Humidity: 34, TempOutside: 23}
-
- this.state.columns  = [
-     ['EC', ...Values],
-     ['VWC', ...Values],
-     ['TempSoil', ..Values]
- ];
- */
-
 class LiveDataTemplate extends Component {
 
     constructor(props) {
@@ -42,7 +30,7 @@ class LiveDataTemplate extends Component {
         this.maxWidth = document.querySelector('#main-content').clientWidth - 50;
 
         // initial render of the chart
-        this._renderChart();
+        this.renderChart();
 
         let self = this; // preserve "this"
 
@@ -76,6 +64,7 @@ class LiveDataTemplate extends Component {
 
             self.dataPointsCounter++;
         });
+
     }
 
     componentDidUpdate() {
@@ -85,7 +74,7 @@ class LiveDataTemplate extends Component {
                 x: 'timestamp',
                 value: this.state.dataKeys,
             },
-            length: (this.dataPointsCounter > 10) ? 1 : 0
+            length: (this.dataPointsCounter > 15) ? 1 : 0
         });
     }
 
@@ -94,7 +83,7 @@ class LiveDataTemplate extends Component {
                                         // does this have any performance benefits?
     }
 
-    _renderChart() {
+    renderChart() {
         this.chart = c3.generate({
             bindto: '#' + this.chartID.toString(),
             data: {
@@ -151,29 +140,28 @@ class LiveDataTemplate extends Component {
         startTime = moment(startTime).valueOf(); // get unix time value
         endTime = moment(endTime).valueOf(); // get unix time value
 
-        let bookmarkObj = {"startTime": startTime, "endTime": endTime};
-
         let timerangeBookmarks = JSON.parse(localStorage.getItem("timerangeBookmarks")) || {}; // default to empty obj if it doesnt exist
 
-        let currentBookmarkSensor; // holds a list of time objects
-
         if (this.props.sensorName in timerangeBookmarks) {
-            currentBookmarkSensor = timerangeBookmarks[this.props.sensorName];
-            currentBookmarkSensor.push(bookmarkObj);
+            // sensor key already exists so add to it
+            let currentBookmarkSensor = timerangeBookmarks[this.props.sensorName];
+
+            // check if startTime Key exists
+            if (startTime in currentBookmarkSensor) {
+                // we append to the already created endTime array
+                let endTimeArr = currentBookmarkSensor[startTime];
+                endTimeArr.push(endTime);
+            }
+            else {
+                // we create an endTime array with the value inside
+                currentBookmarkSensor[startTime] = [endTime];
+            }
         }
         else {
-            // add bookmark sensor to the json obj
-            currentBookmarkSensor = [bookmarkObj]; // we can init the array with the bookmarkObj immediately
-            timerangeBookmarks[this.props.sensorName] = currentBookmarkSensor;
+            // we need to init and add bookmark sensor to the json obj
+            // startTime will be a key to an array of endTimes
+            timerangeBookmarks[this.props.sensorName] = {[startTime]: [endTime]};
         }
-
-        // {
-        //     DHT-11: [
-        //         {startTime: value, endTime: value},
-        //         {...}
-        //     ],
-        //     ...
-        // }
 
         // convert to string before storing or else itll break
         timerangeBookmarks = JSON.stringify(timerangeBookmarks);
@@ -181,9 +169,6 @@ class LiveDataTemplate extends Component {
 
         message.success('[' + this.props.sensorName + '-' + this.props.sensorID + '] ' +
             'Bookmarked: ' + startTimeString + ' - ' + endTimeString, 2.5);
-
-        console.info('[' + this.props.sensorName + '-' + this.props.sensorID + '] ' +
-            'Bookmarked: ' + startTimeString + ' - ' + endTimeString);
     };
 
     render() {
@@ -203,11 +188,13 @@ class LiveDataTemplate extends Component {
 
 export default LiveDataTemplate;
 
-/*
- TODO:
- - 8 modules needed for the page!
- - Maybe have behavior so that the server doesn't send data to the specific chart if the chart is paused
- - only sends it on the initial load OR when the chart requests to get data (started chart)
- */
-
+// this format handles bookmarks with the same start time but multiple endTimes
+// {
+//     DHT-11: {
+//      startTime: [endTime, endTime, ...],
+//      startTime: [endTime, endTime, ...],
+//      ...
+//     },
+//     ...
+// }
 
