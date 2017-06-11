@@ -6,7 +6,7 @@ import {Router, IndexRoute, Route, browserHistory} from 'react-router';
 
 let routes = (
     <Router history={browserHistory} >
-        <Route path="/titan-rover-ui/" component={App}>
+        <Route path="/titan-rover-ui-2017/" component={App}>
 
             <IndexRoute component={Modules.Mission.Overview} />
             <Route path="Decagon-5TE" component={Modules.Mission.Decagon5TE} />

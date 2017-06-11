@@ -10,7 +10,7 @@ class NavMenu extends Component {
     render() {
         let sensorItemsGroup = sensorsList.map( (sensor) =>
             <Menu.Item key={sensor.sensorName}>
-                <Link to={"/titan-rover-ui/" + sensor.sensorName} activeClassName="hotfix-item-selected">
+                <Link to={"/titan-rover-ui-2017/" + sensor.sensorName} activeClassName="hotfix-item-selected">
                     <Icon type="eye-o" /> {sensor.sensorName}
                 </Link>
             </Menu.Item>
@@ -27,7 +27,7 @@ class NavMenu extends Component {
                          title={<span><Icon type="desktop"/> <span>Mission Critical</span></span>}>
 
                     <Menu.Item key="overview">
-                        <Link to="/titan-rover-ui/" onlyActiveOnIndex={true} activeClassName="hotfix-item-selected">
+                        <Link to="/titan-rover-ui-2017/" onlyActiveOnIndex={true} activeClassName="hotfix-item-selected">
                             <Icon type="star-o" /> Overview
                         </Link>
                     </Menu.Item>
@@ -35,13 +35,13 @@ class NavMenu extends Component {
                     {sensorItemsGroup}
 
                     <Menu.Item key="waypoints">
-                        <Link to="/titan-rover-ui/waypoints" activeClassName="hotfix-item-selected">
+                        <Link to="/titan-rover-ui-2017/waypoints" activeClassName="hotfix-item-selected">
                             <Icon type="compass" /> Waypoints
                         </Link>
                     </Menu.Item>
 
                     <Menu.Item key="cameras">
-                        <Link to="/titan-rover-ui/livefeeds" activeClassName="hotfix-item-selected">
+                        <Link to="/titan-rover-ui-2017/livefeeds" activeClassName="hotfix-item-selected">
                             <Icon type="camera-o" /> Cameras
                         </Link>
                     </Menu.Item>
@@ -51,7 +51,7 @@ class NavMenu extends Component {
                 <SubMenu key="resources"
                          title={<span><Icon type="paper-clip"/> <span>Resources</span></span>}>
                     <Menu.Item key="querydata">
-                        <Link to="/titan-rover-ui/querydata" activeClassName="hotfix-item-selected">
+                        <Link to="/titan-rover-ui-2017/querydata" activeClassName="hotfix-item-selected">
                             <Icon type="area-chart" /> Query Data
                         </Link>
                     </Menu.Item>
