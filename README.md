@@ -1,6 +1,6 @@
 # Titan Rover UI - 2017
 
-#### Online Working Demo: [https://weffe.github.io/titan-rover-ui/](https://weffe.github.io/titan-rover-ui/)
+#### Online Working Demo: [https://weffe.github.io/titan-rover-ui-2017/](https://weffe.github.io/titan-rover-ui-2017/)
 
 Welcome to the UI used by the Titan Rover team for the 2017 University Rover Challenge. This was my first attempt at creating
 a web application using React. The main purpose for our UI was for it to be a real-time data driven application and we accomplished that
