@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BaseModuleTemplate from '../../../templates/BaseModuleTemplate';
 import ChartPanelTemplate from '../../../templates/ChartPanelTemplate';
 import rover_settings from '../../../../rover_settings.json';
-import { Select, Button, Tabs } from 'antd';
+import { Select, Button, Tabs, Row, Col } from 'antd';
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const sensorsList = rover_settings.sensorsList;
@@ -33,7 +33,7 @@ class ChartGenerationOptions extends Component {
 
     render() {
         return (
-            <Select className="generation-options" multiple onSelect={this.handleOnSelect} onDeselect={this.handleOnDeselect}
+            <Select className="generation-options" mode="multiple" onSelect={this.handleOnSelect} onDeselect={this.handleOnDeselect}
                     optionFilterProp="sensorName" placeholder="Select sensors to generate chart">
                 {this.generationOptions}
             </Select>
@@ -63,8 +63,8 @@ class QueryData extends Component {
         // use maxWidth to hardcode chart width for performance
         // Note: This option should be specified if possible because it can improve its performance because
         // some size calculations will be skipped by an explicit value.
-        // set maxWidth to 92% of main-content width. This handles any weird re-sizing quirks.
-        this.maxWidth = document.querySelector('#main-content').clientWidth * 0.92;
+        // set maxWidth to 97% of main-content width. This handles any weird re-sizing quirks.
+        this.maxWidth = document.querySelector('#main-content').clientWidth * 0.97;
 
     }
 
@@ -151,13 +151,13 @@ class QueryData extends Component {
         for (let pane of panes) {
             if (targetName === pane.title) {
                 // create new content array without the targetKey's panel
-                let newContent= pane.content.filter(obj => obj.panelKey != targetKey);
+                let newContent= pane.content.filter(obj => obj.panelKey !== targetKey);
 
                 // should delete current tab BUUTT
                 // it doesn't... instead it auto-focuses the prev Tab
                 // Let's just call it a feature ;)
                 // if there's no more content then we auto-focus prev tab
-                if (newContent.length == 0) {
+                if (newContent.length === 0) {
                     this.remove(pane.key)
                 }
                 pane.content = newContent;
@@ -184,8 +184,8 @@ class QueryData extends Component {
 
         // find index of the targetKey
         for(let [index, pane] of this.state.panes.entries()) {
-            let paneKeyInt = parseInt(pane.key);
-            let targetKeyInt = parseInt(targetKey);
+            let paneKeyInt = parseInt(pane.key, 10);
+            let targetKeyInt = parseInt(targetKey, 10);
 
             if (paneKeyInt === targetKeyInt) {
                 targetIndex = index;
@@ -199,8 +199,8 @@ class QueryData extends Component {
         if (targetIndex >= 1 && activeKey === targetKey) {
             activeKey = panes[targetIndex-1].key;
         }
-        else if (targetIndex == 0) {
-            if (panes.length == 0) {
+        else if (targetIndex === 0) {
+            if (panes.length === 0) {
                 activeKey = null;
             }
             else {
@@ -226,24 +226,26 @@ class QueryData extends Component {
         }
 
         return (
-            <BaseModuleTemplate moduleName="New Query">
-                <div className="controls">
+            <BaseModuleTemplate moduleName="Query Data">
+                <Row className="controls" type="flex">
                     <ChartGenerationOptions handleOnSelect={this.handleOnSelect} handleOnDeselect={this.handleOnDeselect}/>
                     <Button type="primary" onClick={this.handleGenerateChartPanels}>Generate Charts</Button>
-                </div>
+                </Row>
 
-                <div id="chart-panels">
-                    <Tabs
-                        hideAdd
-                        activeKey={this.state.activeKey}
-                        type="editable-card"
-                        onChange={this.handleOnChange}
-                        onEdit={this.handleOnEdit}
-                        animated={false}
-                    >
-                        {panes}
-                    </Tabs>
-                </div>
+                <Row id="chart-panels">
+                    <Col span={24}>
+                        <Tabs
+                            hideAdd
+                            activeKey={this.state.activeKey}
+                            type="editable-card"
+                            onChange={this.handleOnChange}
+                            onEdit={this.handleOnEdit}
+                            animated={false}
+                        >
+                            {panes}
+                        </Tabs>
+                    </Col>
+                </Row>
             </BaseModuleTemplate>
         );
     }

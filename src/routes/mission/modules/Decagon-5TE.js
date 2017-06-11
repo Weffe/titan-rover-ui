@@ -3,6 +3,9 @@ import BaseModuleTemplate from '../../../templates/BaseModuleTemplate';
 import LiveDataTemplate from '../../../templates/LiveDataTemplate';
 
 class Decagon5TE extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (
@@ -11,7 +14,11 @@ class Decagon5TE extends Component {
                     sensorName="Decagon-5TE"
                     sensorID="01"
                     chartType="line"
+                    sensorHeaders={['EC', 'VWC', 'Soil Temp (C)']}
+                    minRange={50}
+                    maxRange={500}
                 />
+
             </BaseModuleTemplate>
         );
     }

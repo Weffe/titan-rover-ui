@@ -23,64 +23,55 @@ class LiveDataTemplate extends Component {
         this.handleBookmark = this.handleBookmark.bind(this);
     }
 
+    /**
+     * Returns a random integer between min (inclusive) and max (inclusive)
+     * Using Math.round() will give you a non-uniform distribution!
+     */
+    getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
     componentDidMount() {
         // use maxWidth to hardcode chart width for performance
         // Note: This option should be specified if possible because it can improve its performance because
         // some size calculations will be skipped by an explicit value.
-        this.maxWidth = document.querySelector('#main-content').clientWidth - 50;
+        // set maxWidth to 97% of main-content width. This handles any weird re-sizing quirks.
+        this.maxWidth = document.querySelector('#main-content').clientWidth * 0.97;
 
         // initial render of the chart
         this.renderChart();
-
-        let self = this; // preserve "this"
-
-        // socket Event handlers
-        // event for inital socket connection to set client id for future use on server-side
-        this.socketClient.on('get: client id', function () {
-            console.info("get: client id CALLED. Sending...");
-            console.info(self.chartID);
-            self.socketClient.emit('set: client id', self.props.sensorID);
-        });
-
-        // updating chart
-        this.socketClient.on('update: chart data', function(dataObj) {
-            console.info('update: chart data CALLED');
-            console.info(dataObj);
-
-            let keys = [];
-
-            for(let key in dataObj) {
-                if (dataObj.hasOwnProperty(key)) {
-                    // add all keys in except for ID
-                    if (!(key === 'id')) {
-                        keys.push(key);
-                    }
-                }
-            }
-            // convert to Date Object for c3 to use as labeling
-            dataObj.timestamp = new Date(dataObj.timestamp);
-
-            self.setState({dataObj: dataObj, dataKeys: keys});
-
-            self.dataPointsCounter++;
-        });
-
+        this.generateRandomData();
     }
+
+    generateRandomData = () => {
+        this.interval = setInterval( () => {
+                let {sensorHeaders, minRange, maxRange} = this.props;
+                let randomData = sensorHeaders.map(_ => {
+                    return this.getRandomInt(minRange, maxRange);
+                });
+
+                this.setState({
+                    randomData: randomData
+                });
+
+                this.dataPointsCounter++;
+            },
+            this.getRandomInt(650, 2000)
+        );
+    };
 
     componentDidUpdate() {
         this.chart.flow({
-            json: [this.state.dataObj],
-            keys: {
-                x: 'timestamp',
-                value: this.state.dataKeys,
-            },
+            rows: [
+                this.props.sensorHeaders,
+                this.state.randomData
+            ],
             length: (this.dataPointsCounter > 15) ? 1 : 0
         });
     }
 
     componentWillUnmount() {
-        this.socketClient.disconnect(); // do we need to disconnect our current connection when we unmount our charts from the viewpage?
-                                        // does this have any performance benefits?
+        clearInterval(this.interval);
     }
 
     renderChart() {
@@ -93,17 +84,6 @@ class LiveDataTemplate extends Component {
             size: {
                 width: this.maxWidth
             },
-            zoom: {
-                enabled: true
-            },
-            axis: {
-                x: {
-                    type: 'timeseries',
-                    tick: {
-                        format: '%H:%M:%S' // Error displaying Hour. It's not the correct hour
-                    }
-                }
-            },
             ...this.props.chartProps // additional chart properties
         });
     }
@@ -113,12 +93,12 @@ class LiveDataTemplate extends Component {
         if (this.state.isRunning) {
             // handle pause
             this.setState({isRunning: false});
-            this.socketClient.disconnect();
+            clearInterval(this.interval);
         }
         else {
             // handle start
             this.setState({isRunning: true});
-            this.socketClient.connect(rover_settings.homebase_ip);
+            this.generateRandomData();
         }
     }
 
