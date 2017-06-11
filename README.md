@@ -9,7 +9,7 @@ by using socket.io!
 Some things that I have learned from this project is that I need a better file structure. Granted that this was my first attempt at
 building a web app and also my first time working with React so its painfully obvious the decisions I made are not the best. I plan to
 take what I have learned and re-write the 2018 UI with better everything: better file organization, better smart vs dumb component separation,
-use of HoC, etc.
+use of Higher Order Components, etc.
 
 Things Used:
 
