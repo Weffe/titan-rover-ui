@@ -11,4 +11,4 @@ building a web app and also my first time working with React so its painfully ob
 take what I have learned and re-write the 2018 UI with better everything: better file organization, better smart vs dumb component separation,
 use of HoC, etc.
 
-- Weffe
+\- Weffe
